@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace api.Controllers
 {
     [ApiController]
-    [Route("api/Greater")]
-    public class Greater : ControllerBase
+    [Route("api/Greater_Task44")]
+    public class Greater_Task44 : ControllerBase
     {
         [HttpGet]
         public string Get([FromQuery] string name = "")

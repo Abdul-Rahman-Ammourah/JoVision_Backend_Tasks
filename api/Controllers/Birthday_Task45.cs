@@ -1,19 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
     [ApiController]
-    [Route("api/BirthDay")]
-    public class BirthDay
+    [Route("api/[controller]")]
+    public class Birthday_Task45
     {
         [HttpGet]
         public string Get([FromQuery] string name = "", [FromQuery] int year = 0, [FromQuery] int month = 0, [FromQuery] int day = 0){
-
             if (string.IsNullOrEmpty(name))
             {
                 if (year == 0 || month == 0 || day == 0){
@@ -34,6 +32,5 @@ namespace api.Controllers
                 }
             }
         }
-        
     }
 }
