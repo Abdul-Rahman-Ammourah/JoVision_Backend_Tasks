@@ -74,7 +74,7 @@ namespace api.Controllers
             {
                 byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
 
-                // Set the Content-Disposition header to prompt a download
+                // Set the Content-Disposition to make it an attachment
                 var contentDisposition = new System.Net.Mime.ContentDisposition
                 {
                     FileName = FileName,
