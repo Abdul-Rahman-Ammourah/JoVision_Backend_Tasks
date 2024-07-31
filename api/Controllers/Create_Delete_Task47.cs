@@ -15,9 +15,14 @@ namespace api.Controllers
             public IFormFile? File { get; set; }
             public string? Owner { get; set; }
         }
+        public class Metadata {
+            public string? Ownername { get; set; }
+            public string CreationDate { get; set; } = DateTime.Now.ToString();
+            public string LastModifiedDate { get; set; } = DateTime.Now.ToString();
+        }
 
-        [HttpPost]
-        public IActionResult Post([FromForm] Upload upload)
+        [HttpPost("Create")]
+        public IActionResult Create([FromForm] Upload upload)
         {
             //Check if the file was uploaded
             if (upload.File == null || upload.File.Length == 0)
@@ -37,8 +42,9 @@ namespace api.Controllers
             string path = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
             string safeOwnerName = Path.GetFileNameWithoutExtension(upload.Owner ?? "unknown").Replace(" ", "_");
             string filePath = Path.Combine(path, $"{safeOwnerName}_{file.FileName}");
-
-            string metadataFilePath = Path.Combine(path, $"{safeOwnerName}_{Path.GetFileNameWithoutExtension(file.FileName)}.json");
+            //Creating the Metadata folder
+            string metadatapath = Path.Combine(path, "metadata");
+            string metadataFilePath = Path.Combine(metadatapath, $"{safeOwnerName}_{Path.GetFileNameWithoutExtension(file.FileName)}.json");
         
             //check if the file exists
             if (System.IO.File.Exists(filePath)){
@@ -60,12 +66,18 @@ namespace api.Controllers
 
                     file.CopyTo(fs);
                 }
-
-                var metadata = new {
+                //Check if the Metadata folder exists
+                var metadataDir = Path.GetDirectoryName(metadataFilePath);
+                if (metadataDir != null && !Directory.Exists(metadataDir)){
+                    Directory.CreateDirectory(metadataDir);
+                }
+                // Create the metadata
+                var metadata = new Metadata(){
                     Ownername = upload.Owner,
-                    Creation = DateTime.Now,
-                    LastModified = DateTime.Now
+                    CreationDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                    LastModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
+                
                 using (var metadataStream = new FileStream(metadataFilePath, FileMode.Create, FileAccess.Write))
                 using (var writer = new StreamWriter(metadataStream))
                 {
@@ -81,7 +93,7 @@ namespace api.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("Delete")]
         public IActionResult Delete([FromQuery] string FileName,[FromQuery] string Ownername){
             if (string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(Ownername)){
                 return BadRequest("FileName or Ownername is missing");

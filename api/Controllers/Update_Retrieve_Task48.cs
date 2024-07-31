@@ -12,6 +12,13 @@ namespace api.Controllers
     [Route("api/[controller]")]
     public class Update_Retrieve_Task48 : ControllerBase
     {
+        public class Metadata {
+            public string? Ownername { get; set; }
+
+            public string? CreattionDate { get; set; }
+
+            public string? LastModifiedDate { get; set; }
+        }
         public class Upload
         {
             public IFormFile? File { get; set; }
@@ -20,7 +27,7 @@ namespace api.Controllers
         
 
 
-        [HttpPost]
+        [HttpPost("Update")]
         public IActionResult Update([FromForm] Upload upload)
         {
             //Check if the file was uploaded
@@ -40,28 +47,42 @@ namespace api.Controllers
 
 
             string path = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
-            
+            string metadataPath = Path.Combine(path, "metadata");
             // Ensure the directory exists
             if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
+                return BadRequest("Directory or file does not exist");
             
             string filePath = Path.Combine(path, $"{upload.Owner}_{file.FileName}");
-
+            string metadataFilePath = Path.Combine(metadataPath, $"{upload.Owner}_{Path.GetFileNameWithoutExtension(file.FileName)}.json");
             if(System.IO.File.Exists(filePath)){
+                FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write);
                 try{
-                using (var fs = new FileStream(filePath, FileMode.Create,FileAccess.Write))
-                {
+                
                     file.CopyTo(fs);
-                    return Ok("File uploaded successfully");
-                }
+                    
+                    if (System.IO.File.Exists(metadataFilePath)){
+                        var json = System.IO.File.ReadAllText(metadataFilePath);
+                        var data = JsonConvert.DeserializeObject<Metadata>(json);
+                        if (data != null){
+                            data.LastModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                            var jsonData = JsonConvert.SerializeObject(data);
+                            System.IO.File.WriteAllText(metadataFilePath, jsonData);
+                        }else{
+                            return BadRequest("Metadata file does not exist");
+                        }
+                    }else{
+                        return BadRequest("Metadata file does not exist");
+                    }
+                    return Ok("File Updated successfully");
+                
                 }catch(Exception ex){
                     return StatusCode(500, $"Internal server error: {ex.Message}");
                 }
             }else{
-                return BadRequest("File does not exist");
+                return BadRequest("File or directory does not exist");
             }
         }
-        [HttpGet]
+        [HttpGet("Retrieve")]
         public IActionResult Retrieve([FromQuery] string Owner = "", [FromQuery] string FileName = "")
         {
             if (string.IsNullOrEmpty(Owner) || string.IsNullOrEmpty(FileName))
