@@ -33,5 +33,5 @@ C:\Users\welle\Desktop\College\Jovision Training\JoVision_Backend_Tasks\api\obj\
 C:\Users\welle\Desktop\College\Jovision Training\JoVision_Backend_Tasks\api\obj\Debug\net8.0\api.genruntimeconfig.cache
 C:\Users\welle\Desktop\College\Jovision Training\JoVision_Backend_Tasks\api\obj\Debug\net8.0\ref\api.dll
 C:\Users\welle\Desktop\College\Jovision Training\JoVision_Backend_Tasks\api\bin\Debug\net8.0\Newtonsoft.Json.dll
-C:\Users\welle\Desktop\College\Jovision Training\JoVision_Backend_Tasks\api\bin\Debug\net8.0\Uploads\metadata\Hello_Cute profile .json
-C:\Users\welle\Desktop\College\Jovision Training\JoVision_Backend_Tasks\api\bin\Debug\net8.0\Uploads\metadata\Hello2_Image.json
+C:\Users\welle\Desktop\College\Jovision Training\JoVision_Backend_Tasks\api\bin\Debug\net8.0\Uploads\metadata\Hello1_Image.json
+C:\Users\welle\Desktop\College\Jovision Training\JoVision_Backend_Tasks\api\bin\Debug\net8.0\Uploads\metadata\Welcome_Cute profile .json
